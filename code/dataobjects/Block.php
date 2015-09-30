@@ -18,12 +18,8 @@ class Block extends DataObject {
     );
 
 	private static $has_one = array(
-		'MainImage' => "CloudinaryImage"
+		'Photo' => "CloudinaryImage"
 	);
-
-	private static $many_many = array(
-		'Files' => 'File'
-    );
 
 	private static $many_many_extraFields = array(
 		'Files' => array('SortOrder' => 'Int')
@@ -98,18 +94,12 @@ class Block extends DataObject {
 		$fields->removeByName('Images');
 		$fields->removeByName('Files');
 
-		// Media tab
-		$fields->addFieldToTab('Root', new TabSet('Media'));
-
 		// If this Block belongs to more than one page, show a warning
 		// TODO: This is not working when a block is added under another block
 		$pcount = $this->Pages()->Count();
 		if($pcount > 1) {
 			$globalwarningfield = new LiteralField("IsGlobalBlockWarning", '<p class="message warning">This block is in use on '.$pcount.' pages - any changes made will also affect the block on these pages</p>');
 			$fields->addFieldToTab("Root.Main", $globalwarningfield, 'Name');
-			$fields->addFieldToTab("Root.Media.Images", $globalwarningfield);
-			$fields->addFieldToTab("Root.Media.Files", $globalwarningfield);
-			$fields->addFieldToTab("Root.Media.Video", $globalwarningfield);
 			$fields->addFieldToTab("Root.Template", $globalwarningfield);
 			$fields->addFieldToTab("Root.Settings", $globalwarningfield);
 		}
@@ -118,13 +108,11 @@ class Block extends DataObject {
 		$fields->addFieldsToTab("Root.Main", new DropdownField('Header', 'Use name as header', $this->dbObject('Header')->enumValues()), 'Content');
 		$fields->addFieldsToTab("Root.Main", new HTMLEditorField('Content', 'Content'));
 
-		$fields->addFieldToTab('Root.Media.Images', DirectCloudinaryUploadField::create('MainImage', 'Main Image'));
-
+		$fields->replaceField('PhotoID', DirectCloudinaryUploadField::create('Photo', 'Main Image'));
 
 		$fileField = new SortableUploadField('Files', 'Files');
 
-		$fields->addFieldToTab('Root.Media.Files', $fileField);
-		$fields->addFieldToTab('Root.Media.Video', new TextField('VideoURL', 'Video URL'));
+		$fields->addFieldToTab('Root.Main', new TextField('VideoURL', 'Video URL'));
 
 		// Template tab
 		$optionset = array();
@@ -259,8 +247,8 @@ class Block extends DataObject {
 	}
 
 	public function getThumbnail() {
-		if ($this->MainImage) {
-			return $this->MainImage->croppedImage(50,40);
+		if ($this->Photo) {
+			return $this->Photo->croppedImage(50,40);
 		}
 	}
 
