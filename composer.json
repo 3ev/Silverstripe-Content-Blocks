@@ -1,5 +1,5 @@
 {
-	"name": "nobrainerweb/silverstripe-content-blocks",
+	"name": "3ev/silverstripe-content-blocks",
 	"description": "Split your page content into manageable blocks/sections of content, each with their own template",
 	"type": "silverstripe-module",
 	"homepage": "https://github.com/NobrainerWeb/Silverstripe-Content-Blocks",
@@ -13,7 +13,7 @@
 		}
 	],
 	"support": {
-		"issues": "https://github.com/NobrainerWeb/Silverstripe-Content-Blocks/issues"
+		"issues": "https://github.com/3ev/Silverstripe-Content-Blocks/issues"
 	},
 	"require": {
         "silverstripe/framework": "~3.1",
